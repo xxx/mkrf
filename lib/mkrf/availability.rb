@@ -12,8 +12,8 @@ module Mkrf
     DEFAULT_LIBS = ["ruby", "dl"]
     
     # These really shouldn't be static like this..
-    TEMP_SOURCE_FILE = "/tmp/temp_source.c"
-    TEMP_EXECUTABLE = "/tmp/temp_executable"
+    TEMP_SOURCE_FILE = "temp_source.c"
+    TEMP_EXECUTABLE = "temp_executable"
     
     attr_reader :headers, :loaded_libs, :includes
     
