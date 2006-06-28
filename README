@@ -1,6 +1,6 @@
 = mkrf -- making C extensions for Ruby a bit easier
 
-<tt>mkrf</tt> is intended to replace <tt>mkmf</tt>, a library for buildling
+<tt>mkrf</tt> is intended to replace <tt>mkmf</tt>, a library for building
 Makefiles to build C extensions to Ruby. Its major goals are easy code reuse of
 its <tt>Availability</tt> class and simple, well documented, use of the
 <tt>Generator</tt> class for Rakefile generation for extensions.

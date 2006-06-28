@@ -138,11 +138,11 @@ module Mkrf
     
     def with_stackable_attribute(attribute, *args)
       args = args.to_a
-      instance_variable_set(:"@#{attribute}", 
-                            instance_variable_get(:"@#{attribute}") + args)
+      instance_variable_set("@#{attribute}", 
+                            instance_variable_get("@#{attribute}") + args)
       value = yield
-      instance_variable_set(:"@#{attribute}", 
-                            instance_variable_get(:"@#{attribute}") - args)
+      instance_variable_set("@#{attribute}", 
+                            instance_variable_get("@#{attribute}") - args)
       return value
     end
     
