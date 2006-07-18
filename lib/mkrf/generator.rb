@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rbconfig'
 require 'rake/tasklib'
 
+
 module Mkrf
   
   # +Generator+ is concerned with taking configuration for an extension
@@ -37,7 +38,7 @@ module Mkrf
     # * +library_location+ -- the location of the library to be compiled on the local filesystem
     # * +source_patterns+ -- a pattern describing source files to be compiled, "lib/*.c" by default
     def initialize(library_location, *source_patterns)
-      @sources = source_patterns || ["lib/*.c"]
+      @sources = (source_patterns.empty? ? ["lib/*.c"] : source_patterns)
       @library_location = library_location
       @available = Mkrf::Availability.new(:includes => [CONFIG['includedir'], CONFIG["archdir"],
                                                         CONFIG['sitelibdir'], "."] )
