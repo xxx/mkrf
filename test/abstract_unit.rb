@@ -3,14 +3,11 @@ $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/mkrf'
 
+$debug = false
+
 class Test::Unit::TestCase
-  # Set to true for full command line output
-  @@debug = false
-  
-  private
-  
   def silence_command_line
-    yield and return if @@debug
+    yield and return if $debug
     silence_stream(STDERR) do
       silence_stream(STDOUT) do
         yield

@@ -190,6 +190,7 @@ module Mkrf
     end
         
     def silence_command_line
+      yield and return if $debug
       silence_stream(STDERR) do
         silence_stream(STDOUT) do
           yield
