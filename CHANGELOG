@@ -1,4 +1,5 @@
 = svn
+* [FIXED] Use proper file extensions for libraries.
 * [FIXED] default source pattern for Generator
 
 = 0.1.0  6/28/06

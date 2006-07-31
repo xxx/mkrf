@@ -19,11 +19,11 @@ The most basic usage looks like this, with the name of the library to be linked
 as the first argument to <tt>Mkrf::Generator.new</tt>:
 
   require 'mkrf'
-  Mkrf::Generator.new('libtrivial_so.bundle')
+  Mkrf::Generator.new('libtrivial')
 
 Extra arguments may be passed to the generator in a block:
 
-  Mkrf::Generator.new('libxml_so.bundle', '*.c') do |g|
+  Mkrf::Generator.new('libxml', '*.c') do |g|
     g.include_library('socket','socket')
     g.include_header('libxml/xmlversion.h', 
                      '/opt/include/libxml2', 

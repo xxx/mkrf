@@ -13,12 +13,12 @@ module Mkrf
   # to compile:
   #
   #   require 'mkrf'
-  #   Mkrf::Generator.new('libtrivial_so.bundle')
+  #   Mkrf::Generator.new('libtrivial')
   #
   # Configuration of the build can be passed to the +Generator+ constructor
   # as a block:
   #
-  #   Mkrf::Generator.new('libxml_so.bundle', '*.c') do |g|
+  #   Mkrf::Generator.new('libxml', '*.c') do |g|
   #     g.include_library('socket','socket')
   #     g.include_header('libxml/xmlversion.h',
   #                      '/opt/include/libxml2',
@@ -35,11 +35,11 @@ module Mkrf
     # filesystem.
     #
     # Params:
-    # * +library_location+ -- the location of the library to be compiled on the local filesystem
+    # * +extension_name+ -- the name of the extension
     # * +source_patterns+ -- a pattern describing source files to be compiled, "lib/*.c" by default
-    def initialize(library_location, *source_patterns)
+    def initialize(extension_name, *source_patterns)
       @sources = (source_patterns.empty? ? ["lib/*.c"] : source_patterns)
-      @library_location = library_location
+      @extension_name = extension_name + ".#{CONFIG['DLEXT']}"
       @available = Mkrf::Availability.new(:includes => [CONFIG['includedir'], CONFIG["archdir"],
                                                         CONFIG['sitelibdir'], "."] )
       @defines = []
@@ -113,7 +113,7 @@ module Mkrf
         require 'rake/clean'
         
         CLEAN.include('*.o')
-        CLOBBER.include('#{@library_location}')
+        CLOBBER.include('#{@extension_name}')
         
         SRC = FileList[#{sources.join(',')}]
         OBJ = SRC.ext('o')
@@ -128,7 +128,7 @@ module Mkrf
 
         CFLAGS   = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']} #{defines_compile_string}"
         
-        task :default => ['#{@library_location}']
+        task :default => ['#{@extension_name}']
 
         rule '.o' => '.c' do |t|
           sh "\#{CC} \#{CFLAGS} \#{INCLUDES} -c -o \#{t.name} \#{t.source}"
@@ -138,8 +138,8 @@ module Mkrf
           sh "\#{LDSHARED} \#{LIBPATH} -o \#{OBJ} \#{LOCAL_LIBS} \#{LIBS}"
         end
 
-        file '#{@library_location}' => OBJ do
-          sh "\#{LDSHARED} \#{LIBPATH} -o #{@library_location} \#{OBJ} \#{LIBS}"
+        file '#{@extension_name}' => OBJ do
+          sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{LIBS}"
         end
       END_RAKEFILE
     end

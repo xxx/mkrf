@@ -5,7 +5,7 @@ def crash(str)
   exit 1
 end
 
-Mkrf::Generator.new('libxml_so.bundle', '*.c') do |g|
+Mkrf::Generator.new('libxml_so', '*.c') do |g|
 
   g.include_library('socket','socket')
   g.include_library('nsl','gethostbyname')
