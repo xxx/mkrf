@@ -31,6 +31,8 @@ module Mkrf
     
     CONFIG = Config::CONFIG
     
+    attr_accessor :additional_code # Any extra code to be added to the Rakefile as a string
+    
     # Create a new generator which will write a new +Rakefile+ to the local
     # filesystem.
     #
@@ -141,6 +143,8 @@ module Mkrf
         file '#{@extension_name}' => OBJ do
           sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{LIBS}"
         end
+        
+        #{additional_code}
       END_RAKEFILE
     end
   end

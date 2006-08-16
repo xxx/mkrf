@@ -4,7 +4,7 @@ class TestSampleProjects < Test::Unit::TestCase
   SAMPLES_DIR = File.dirname(__FILE__) + '/sample_files'
   
   SAMPLE_LIBS = {
-    :libtrivial => '/libtrivial/libtrivial.bundle',
+    :trivial => '/libtrivial/libtrivial.bundle',
     :syck => '/syck-0.55/ext/ruby/ext/syck/syck.bundle',
     :libxml => '/libxml-ruby-0.3.8/ext/xml/libxml_so.bundle'
   }
@@ -18,27 +18,21 @@ class TestSampleProjects < Test::Unit::TestCase
     end
   end
   
-  def test_that_trivial_lib_compiles
-    assert !File.exist?(SAMPLES_DIR + SAMPLE_LIBS[:libtrivial])
-    silence_command_line do 
-      system('rake test:samples:trivial')
+  SAMPLE_LIBS.each do |k,v|
+    define_method("test_that_#{k}_compiles") do
+      assert_creates_file(SAMPLES_DIR + v) do
+        silence_command_line do 
+          system("rake test:samples:#{k}")
+        end
+      end
     end
-    assert File.exist?(SAMPLES_DIR + SAMPLE_LIBS[:libtrivial])
   end
   
-  def test_that_syck_compiles
-    assert !File.exist?(SAMPLES_DIR + SAMPLE_LIBS[:syck])
-    silence_command_line do 
-      system('rake test:samples:syck')
-    end
-    assert File.exist?(SAMPLES_DIR + SAMPLE_LIBS[:syck])
-  end
+  protected
   
-  def test_that_libxml_compiles
-    assert !File.exist?(SAMPLES_DIR + SAMPLE_LIBS[:libxml])
-    silence_command_line do 
-      system('rake test:samples:libxml')
-    end
-    assert File.exist?(SAMPLES_DIR + SAMPLE_LIBS[:libxml])
+  def assert_creates_file(file)
+    assert !File.exist?(file)
+    yield
+    assert File.exist?(file)
   end
 end
