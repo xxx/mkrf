@@ -140,6 +140,7 @@ module Mkrf
           sh "\#{LDSHARED} \#{LIBPATH} -o \#{OBJ} \#{LOCAL_LIBS} \#{LIBS}"
         end
 
+        desc "Build this extension"
         file '#{@extension_name}' => OBJ do
           sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{LIBS}"
         end
