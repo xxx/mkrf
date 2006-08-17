@@ -71,9 +71,8 @@ module Mkrf
     # * <tt>header</tt> -- the header to be searched for
     # * <tt>paths</tt> -- an optional list of search paths if the header is not found in the default paths
     def has_header?(header, *paths)
-      return true if header_already_loaded?(header)
-      return true if header_can_link?(header)
-      return true if header_found_in_paths?(header, paths)
+      return true if header_already_loaded?(header) || header_can_link?(header) || 
+                     header_found_in_paths?(header, paths)
       logger.warn "Header not found: #{header}"
       return false
     end

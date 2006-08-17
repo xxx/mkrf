@@ -22,6 +22,14 @@ as the first argument to <tt>Mkrf::Generator.new</tt>:
   Mkrf::Generator.new('libtrivial')
 
 Extra arguments may be passed to the generator in a block:
+  
+  Mkrf::Generator.new('libtrivial) do |g|
+    g.logger.level = Logger::WARN
+    g.include_library('z')
+  end
+
+If the extension does not follow the source in <tt>lib/</tt> / <tt>.c</tt> 
+extension convention, it may be overridden in the constructor:
 
   Mkrf::Generator.new('libxml', '*.c') do |g|
     g.include_library('socket','socket')
@@ -29,13 +37,6 @@ Extra arguments may be passed to the generator in a block:
                      '/opt/include/libxml2', 
                      '/usr/local/include/libxml2', 
                      '/usr/include/libxml2')
-  end
-
-If the extension does not follow the source in <tt>lib/</tt> / <tt>.c</tt> 
-extension convention, it may be overridden in the constructor:
-
-  Mkrf::Generator.new('syck.bundle', '*.c') do |g|
-    g.include_header("st.h")
   end
 
 

@@ -97,7 +97,12 @@ module Mkrf
       @available.has_function? function
     end
     
-    # Returns the +Logger+ instance for our mkrf run. You can use this to set logging levels.
+    # Returns mkrf's logger instance. You can use this to set logging levels.
+    #
+    #   Mkrf::Generator.new('libsomethin') do |g|
+    #     g.logger.level = Logger::WARN
+    #   end
+    #
     def logger
       @available.logger
     end
@@ -106,6 +111,7 @@ module Mkrf
       File.open(filename, "w+") do |f|
         f.puts rakefile_contents
       end
+      @available.logger.info "Rakefile written"
     end
     
     def defines_compile_string # :nodoc:
@@ -120,7 +126,7 @@ module Mkrf
         require 'rake/clean'
         
         CLEAN.include('*.o')
-        CLOBBER.include('#{@extension_name}')
+        CLOBBER.include('#{@extension_name}', 'mkrf.log')
         
         SRC = FileList[#{sources.join(',')}]
         OBJ = SRC.ext('o')

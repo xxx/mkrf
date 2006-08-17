@@ -34,7 +34,7 @@ namespace :test do
     BASE_DIR = File.dirname(__FILE__) + '/test/sample_files'
     
     SAMPLE_DIRS = {
-      :libtrivial => BASE_DIR + '/libtrivial/',
+      :trivial => BASE_DIR + '/libtrivial/',
       :syck => BASE_DIR + '/syck-0.55/ext/ruby/ext/syck/',
       :libxml => BASE_DIR + '/libxml-ruby-0.3.8/ext/xml/'
     }
@@ -42,11 +42,11 @@ namespace :test do
     task :default => [:all]
     
     desc "Try to compile all of the sample extensions"
-    task :all => [:clean, :trivial, :libxml, :syck]
+    task :all => [:trivial, :libxml, :syck]
     
     desc "Try to compile a trivial extension"
     task :trivial do
-      sh "cd #{SAMPLE_DIRS[:libtrivial]}; ruby extconf.rb; rake"
+      sh "cd #{SAMPLE_DIRS[:trivial]}; ruby extconf.rb; rake"
     end
     
     desc "Try to compile libxml"
@@ -60,11 +60,16 @@ namespace :test do
     end
     
     desc "Clean up after sample tests"
-    task :clean do
-      SAMPLE_DIRS.each_value do |test_dir|
-        puts "test_dir is #{test_dir}"
-        next unless File.exist?(test_dir + "/Rakefile")
-        sh "cd #{test_dir}; rake clean; rake clobber; rm Rakefile"
+    task :clobber do
+      if ENV['PROJECT']
+        if File.exist?(SAMPLE_DIRS[ENV['PROJECT'].to_sym] + "/Rakefile")
+          sh "cd #{SAMPLE_DIRS[ENV['PROJECT'].to_sym]}; rake clobber; rm Rakefile"
+        end
+      else
+        SAMPLE_DIRS.each_value do |test_dir|
+          next unless File.exist?(test_dir + "/Rakefile")
+          sh "cd #{test_dir}; rake clobber; rm Rakefile"
+        end
       end
     end
     
