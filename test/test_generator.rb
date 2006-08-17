@@ -9,7 +9,7 @@ module Mkrf
 end
 
 class TestGenerator < Test::Unit::TestCase
-  def teardown
+  def setup
     FileUtils.rm_f 'mkrf.log'
   end
   

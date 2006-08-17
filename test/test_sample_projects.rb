@@ -12,14 +12,11 @@ class TestSampleProjects < Test::Unit::TestCase
   # Set to true for full command line output
   @@debug = false
   
-  def setup
-    silence_command_line do
-      system('rake test:samples:clean')
-    end
-  end
-  
   SAMPLE_LIBS.each do |k,v|
     define_method("test_that_#{k}_compiles") do
+      silence_command_line do
+        system("rake test:samples:clobber PROJECT=#{k}")
+      end
       assert_creates_file(SAMPLES_DIR + v) do
         silence_command_line do 
           system("rake test:samples:#{k}")

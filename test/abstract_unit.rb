@@ -36,9 +36,9 @@ class Test::Unit::TestCase
   protected
   
   def assert_creates_file(file)
-    assert !File.exist?(file)
+    assert !File.exist?(file), "#{file} already exists!"
     yield
-    assert File.exist?(file)
+    assert File.exist?(file), "#{file} wasn't created!"
   end
   
 end
