@@ -32,4 +32,13 @@ class Test::Unit::TestCase
   ensure
     stream.reopen(old_stream)
   end
+  
+  protected
+  
+  def assert_creates_file(file)
+    assert !File.exist?(file)
+    yield
+    assert File.exist?(file)
+  end
+  
 end

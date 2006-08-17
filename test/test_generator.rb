@@ -9,6 +9,10 @@ module Mkrf
 end
 
 class TestGenerator < Test::Unit::TestCase
+  def teardown
+    FileUtils.rm_f 'mkrf.log'
+  end
+  
   def test_default_sources
     g = Mkrf::Generator.new('testlib')
     assert_equal ["'lib/*.c'"], g.sources, "Default sources incorrect"
@@ -19,6 +23,29 @@ class TestGenerator < Test::Unit::TestCase
       g.additional_code = spec_code
     end
     assert_match spec_code, generator.rakefile_contents
+  end
+  
+  def test_logging_levels
+    generator = Mkrf::Generator.new('testlib') do |g|
+      g.logger.level = Logger::WARN
+      g.include_header 'stdio.h'
+      g.include_header 'fake_header.h'
+    end
+    
+    logs = File.open('mkrf.log').read
+    assert_no_match(/INFO/, logs)
+    assert_match(/WARN/, logs)
+  end
+  
+  def test_logging_defaults_to_info_level
+    generator = Mkrf::Generator.new('testlib') do |g|
+      g.include_header 'stdio.h'
+      g.include_header 'fake_header.h'
+    end
+    
+    logs = File.open('mkrf.log').read
+    assert_match(/INFO/, logs)
+    assert_match(/WARN/, logs)
   end
   
   protected

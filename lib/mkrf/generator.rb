@@ -97,6 +97,11 @@ module Mkrf
       @available.has_function? function
     end
     
+    # Returns the +Logger+ instance for our mkrf run. You can use this to set logging levels.
+    def logger
+      @available.logger
+    end
+    
     def write_rakefile(filename = "Rakefile") # :nodoc:
       File.open(filename, "w+") do |f|
         f.puts rakefile_contents

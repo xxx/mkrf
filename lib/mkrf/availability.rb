@@ -15,7 +15,7 @@ module Mkrf
     TEMP_SOURCE_FILE = "temp_source.c"
     TEMP_EXECUTABLE = "temp_executable"
     
-    attr_reader :headers, :loaded_libs, :includes
+    attr_reader :headers, :loaded_libs, :includes, :logger
     
     # Create a new Availability instance.
     #
@@ -59,10 +59,9 @@ module Mkrf
     # * <tt>library</tt> -- the library to be included as a string
     # * <tt>function</tt> -- a method to base the inclusion of the library on. +main+ by default.
     def has_library?(library, function = "main")
-      return true if @loaded_libs.include? library
-      with_loaded_libs(library) {
-        has_function? function
-      }
+      logger.info "Checking for library: #{library}"
+      return true if library_already_loaded?(library)
+      found_library?(library, function)
     end
     
     # Returns +true+ if the header is found in the default search path or in
@@ -72,23 +71,10 @@ module Mkrf
     # * <tt>header</tt> -- the header to be searched for
     # * <tt>paths</tt> -- an optional list of search paths if the header is not found in the default paths
     def has_header?(header, *paths)
-      return true if @headers.include? header
-      
-      has_header = with_headers(header) {
-        can_link?(simple_include(header))
-      }
-      
-      return true if has_header
-      
-      paths.each do |include_path|
-        has_header = with_includes(include_path) {
-          with_headers(header) {
-            can_link?(simple_include(header))
-          }
-        }
-        @includes << include_path and return true if has_header
-      end
-
+      return true if header_already_loaded?(header)
+      return true if header_can_link?(header)
+      return true if header_found_in_paths?(header, paths)
+      logger.warn "Header not found: #{header}"
       return false
     end
     
@@ -98,7 +84,13 @@ module Mkrf
     # Params:
     # * <tt>function</tt> -- the function to check for
     def has_function?(function)
-      can_link?(simple_call(function)) or can_link?(simple_reference(function))
+      if can_link?(simple_call(function)) or can_link?(simple_reference(function))
+        logger.info "Function found: #{function}()"
+        return true
+      else
+        logger.warn "Function not found: #{function}()"
+        return false
+      end
     end
     
     # Returns the result of an attempt to compile and link the function body
@@ -133,7 +125,58 @@ module Mkrf
     end
     
     private
-        
+    
+    def found_library?(library, function)
+      library_found = with_loaded_libs(library) {
+        has_function? function
+      }
+      
+      library_found ? logger.info("Library found: #{library}") : 
+                        logger.warn("Library not found: #{library}")
+      
+      library_found
+    end
+    
+    def header_can_link?(header)
+      has_header = with_headers(header) {
+        can_link?(simple_include(header))
+      }
+      
+      if has_header
+        logger.info("Header found: #{header}")
+        return true
+      end 
+    end
+    
+    def library_already_loaded?(library)
+      if @loaded_libs.include? library
+        logger.info "Library already loaded: #{library}" 
+        return true
+      end
+      
+      return false
+    end
+    
+    def header_already_loaded?(header)
+      if @headers.include? header
+        logger.info("Header already loaded: #{header}")
+        return true
+      end 
+      
+      return false
+    end
+    
+    def header_found_in_paths?(header, paths)
+      paths.each do |include_path|
+        if with_includes(include_path) { header_can_link?(header) }
+          @includes << include_path
+          return true
+        end
+      end
+      
+      return false
+    end
+    
     STACKABLE_ATTRIBUTES = ['loaded_libs', 'headers', 'includes']
     
     def with_stackable_attribute(attribute, *args)

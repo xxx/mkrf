@@ -1,5 +1,6 @@
 = svn
-* [NEW] Added a description to the extension building task
+* [NEW] Logging! [22]
+* [NEW] Added a description to the extension building task [21]
 * [NEW] Added additional_code accessor. If you have stuff you want to add to the Rakefile the Generator doesn't provide for, feel free to stick it (in string form!) in here. Yes, I know this smells. If you have a better suggestion, PDI and tell me about it. [20]
 * [FIXED] Use proper file extensions for libraries. [18]
 * [FIXED] default source pattern for Generator [17]
