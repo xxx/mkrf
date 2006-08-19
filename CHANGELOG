@@ -1,4 +1,4 @@
-= svn
+= 0.1.1 8/17/06
 * [NEW] Logging! [22]
 * [NEW] Added a description to the extension building task [21]
 * [NEW] Added additional_code accessor. If you have stuff you want to add to the Rakefile the Generator doesn't provide for, feel free to stick it (in string form!) in here. Yes, I know this smells. If you have a better suggestion, PDI and tell me about it. [20]
