@@ -99,6 +99,8 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'rake'
   s.require_path = 'lib'
   s.autorequire = 'mkrf'
+  
+  s.extra_rdoc_files = [ "README", "MIT-LICENSE", "CHANGELOG" ]
 
   s.files = [ "Rakefile", "README", "CHANGELOG", "MIT-LICENSE" ]
   s.files = s.files + Dir.glob( "lib/**/*" ).delete_if { |item| item.include?( "\.svn" ) }
