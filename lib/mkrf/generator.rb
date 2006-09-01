@@ -123,40 +123,40 @@ module Mkrf
     
     def rakefile_contents # :nodoc:
       <<-END_RAKEFILE
-        require 'rake/clean'
-        
-        CLEAN.include('*.o')
-        CLOBBER.include('#{@extension_name}', 'mkrf.log')
-        
-        SRC = FileList[#{sources.join(',')}]
-        OBJ = SRC.ext('o')
-        CC = "gcc"
+require 'rake/clean'
 
-        LDSHARED = "#{CONFIG['LDSHARED']}"
-        LIBPATH =  '-L"/usr/local/lib"'
-        
-        INCLUDES = "#{@available.includes_compile_string}"
+CLEAN.include('*.o')
+CLOBBER.include('#{@extension_name}', 'mkrf.log')
 
-        LIBS = "#{@available.library_compile_string}"
+SRC = FileList[#{sources.join(',')}]
+OBJ = SRC.ext('o')
+CC = "gcc"
 
-        CFLAGS   = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']} #{defines_compile_string}"
-        
-        task :default => ['#{@extension_name}']
+LDSHARED = "#{CONFIG['LDSHARED']}"
+LIBPATH =  '-L"/usr/local/lib"'
 
-        rule '.o' => '.c' do |t|
-          sh "\#{CC} \#{CFLAGS} \#{INCLUDES} -c -o \#{t.name} \#{t.source}"
-        end
+INCLUDES = "#{@available.includes_compile_string}"
 
-        rule '.so' => '.o' do |t|
-          sh "\#{LDSHARED} \#{LIBPATH} -o \#{OBJ} \#{LOCAL_LIBS} \#{LIBS}"
-        end
+LIBS = "#{@available.library_compile_string}"
 
-        desc "Build this extension"
-        file '#{@extension_name}' => OBJ do
-          sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{LIBS}"
-        end
-        
-        #{additional_code}
+CFLAGS   = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']} #{defines_compile_string}"
+
+task :default => ['#{@extension_name}']
+
+rule '.o' => '.c' do |t|
+  sh "\#{CC} \#{CFLAGS} \#{INCLUDES} -c -o \#{t.name} \#{t.source}"
+end
+
+rule '.so' => '.o' do |t|
+  sh "\#{LDSHARED} \#{LIBPATH} -o \#{OBJ} \#{LOCAL_LIBS} \#{LIBS}"
+end
+
+desc "Build this extension"
+file '#{@extension_name}' => OBJ do
+  sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{LIBS}"
+end
+
+#{additional_code}
       END_RAKEFILE
     end
   end
