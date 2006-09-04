@@ -25,7 +25,7 @@ module Mkrf
     # * <tt>:compiler</tt> -- which compiler to use when determining availability
     # * <tt>:includes</tt> -- directories that should be searched for include files
     def initialize(options = {})
-      @loaded_libs = options[:loaded_libs] || DEFAULT_LIBS
+      @loaded_libs = options[:loaded_libs].to_a || DEFAULT_LIBS
       @headers = options[:headers] || []
       @compiler = options[:compiler] || "gcc"
       @includes = (options[:includes].to_a) || []

@@ -38,12 +38,14 @@ module Mkrf
     #
     # Params:
     # * +extension_name+ -- the name of the extension
-    # * +source_patterns+ -- a pattern describing source files to be compiled, "lib/*.c" by default
-    def initialize(extension_name, *source_patterns)
-      @sources = (source_patterns.empty? ? ["lib/*.c"] : source_patterns)
+    # * +source_patterns+ -- an array of patterns describing source files to be compiled, ["lib/*.c"] by default
+    def initialize(extension_name, source_patterns = ["lib/*.c"], availability_options = {})
+      @sources = source_patterns
       @extension_name = extension_name + ".#{CONFIG['DLEXT']}"
-      @available = Mkrf::Availability.new(:includes => [CONFIG['includedir'], CONFIG["archdir"],
-                                                        CONFIG['sitelibdir'], "."] )
+      default_availability_options = {
+        :includes => [CONFIG['includedir'], CONFIG["archdir"], CONFIG['sitelibdir'], "."]
+      }
+      @available = Mkrf::Availability.new(default_availability_options.merge(availability_options))
       @defines = []
       
       yield self if block_given?

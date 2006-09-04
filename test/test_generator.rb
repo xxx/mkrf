@@ -5,6 +5,8 @@ module Mkrf
   class Generator
     def write_rakefile(file = "Rakefile")
     end
+    
+    attr_reader :available
   end
 end
 
@@ -46,6 +48,11 @@ class TestGenerator < Test::Unit::TestCase
     logs = File.open('mkrf.log').read
     assert_match(/INFO/, logs)
     assert_match(/WARN/, logs)
+  end
+  
+  def test_availability_options_accessible_in_initialize
+    generator = Mkrf::Generator.new('testlib', ['lib/*.c'], {:loaded_libs => 'static_ruby'})
+    assert_equal ['static_ruby'], generator.available.loaded_libs
   end
   
   protected

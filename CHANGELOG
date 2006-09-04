@@ -1,4 +1,5 @@
 = 0.1.1 8/17/06
+* [FIXED] Can now modify Availability options from the Generator contructor. This may break some existing extconfs that use the .new('libname','file_pattern_a', 'file_pattern_b') syntax. File patterns now only belong as arg 2 and should be an array or a string.
 * [FIXED] No indenting generated Rakefile code. [26]
 * [NEW] Logging! [22]
 * [NEW] Added a description to the extension building task [21]
