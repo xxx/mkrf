@@ -9,8 +9,9 @@ module Mkrf
   # which need to determine functionality based on what libraries are available
   # on the current system.
   class Availability
-    DEFAULT_LIBS = ["ruby", "dl"]
-    
+    DEFAULT_INCLUDES = [Config::CONFIG['includedir'], Config::CONFIG["archdir"],
+                        Config::CONFIG['sitelibdir'], "."]
+                        
     # These really shouldn't be static like this..
     TEMP_SOURCE_FILE = "temp_source.c"
     TEMP_EXECUTABLE = "temp_executable"
@@ -25,10 +26,12 @@ module Mkrf
     # * <tt>:compiler</tt> -- which compiler to use when determining availability
     # * <tt>:includes</tt> -- directories that should be searched for include files
     def initialize(options = {})
-      @loaded_libs = options[:loaded_libs].to_a || DEFAULT_LIBS
-      @headers = options[:headers] || []
-      @compiler = options[:compiler] || "gcc"
-      @includes = (options[:includes].to_a) || []
+      
+      @loaded_libs = (options[:loaded_libs] || Config::CONFIG["LIBS"].gsub('-l', '').split).to_a
+      # Not sure what COMMON_HEADERS looks like when populated
+      @headers = options[:headers] || [] # Config::CONFIG["COMMON_HEADERS"]
+      @compiler = options[:compiler] || Config::CONFIG["CC"]
+      @includes = (options[:includes] || DEFAULT_INCLUDES).to_a
       @logger = Logger.new('mkrf.log')
     end
     

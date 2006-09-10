@@ -33,6 +33,8 @@ module Mkrf
     
     attr_accessor :additional_code # Any extra code to be added to the Rakefile as a string
     
+    attr_accessor :ldshared, :cflags
+    
     # Create a new generator which will write a new +Rakefile+ to the local
     # filesystem.
     #
@@ -42,11 +44,11 @@ module Mkrf
     def initialize(extension_name, source_patterns = ["lib/*.c"], availability_options = {})
       @sources = source_patterns
       @extension_name = extension_name + ".#{CONFIG['DLEXT']}"
-      default_availability_options = {
-        :includes => [CONFIG['includedir'], CONFIG["archdir"], CONFIG['sitelibdir'], "."]
-      }
-      @available = Mkrf::Availability.new(default_availability_options.merge(availability_options))
+      @available = Mkrf::Availability.new(availability_options)
       @defines = []
+      
+      @ldshared = CONFIG['LDSHARED']
+      @cflags = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']}"
       
       yield self if block_given?
       write_rakefile
@@ -134,14 +136,14 @@ SRC = FileList[#{sources.join(',')}]
 OBJ = SRC.ext('o')
 CC = "gcc"
 
-LDSHARED = "#{CONFIG['LDSHARED']}"
-LIBPATH =  '-L"/usr/local/lib"'
+LDSHARED = "#{@ldshared}"
+LIBPATH =  '-L"#{CONFIG['rubylibdir']}"'
 
 INCLUDES = "#{@available.includes_compile_string}"
 
 LIBS = "#{@available.library_compile_string}"
 
-CFLAGS   = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']} #{defines_compile_string}"
+CFLAGS   = "#{@cflags} #{defines_compile_string}"
 
 task :default => ['#{@extension_name}']
 

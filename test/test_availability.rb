@@ -95,3 +95,25 @@ class TestAvailability < Test::Unit::TestCase
     end    
   end
 end
+
+class TestAvailabilityDefaults < Test::Unit::TestCase
+  def setup
+    @avail = Mkrf::Availability.new
+    @config = Config::CONFIG
+  end
+  
+  def test_default_libs_should_be_from_rbconfig
+    assert_equal @config["LIBS"].chomp(" "), @avail.library_compile_string
+  end
+  
+  def test_default_compiler_should_be_from_rbconfig
+    assert_equal @config["CC"], @avail.send(:instance_variable_get, :@compiler)
+  end
+  
+  def test_default_include_dir_should_be_from_rbconfig
+    expected = [Config::CONFIG['includedir'], Config::CONFIG["archdir"],
+                Config::CONFIG['sitelibdir'], "."]
+                
+    assert_equal expected, @avail.send(:instance_variable_get, :@includes)
+  end
+end

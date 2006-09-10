@@ -1,4 +1,8 @@
 = svn
+* [FIXED] Correct defaults in Availability. [29]
+* [NEW] Using rubylibdir from rbconfig for library path. [29]
+* [NEW] Availability options go straight to availability without generator modification. [29]
+* [NEW] CFLAGS and LDSHARED now accessible through .cflags and .ldshared. [29]
 * [FIXED] Can now modify Availability options from the Generator contructor. This may break some existing extconfs that use the .new('libname','file_pattern_a', 'file_pattern_b') syntax. File patterns now only belong as arg 2 and should be an array or a string.
 * [FIXED] No indenting generated Rakefile code. [26]
 
