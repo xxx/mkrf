@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/abstract_unit'
+require File.dirname(__FILE__) + '/../abstract_unit'
 
 # stubb this out so we don't overwrite our test rakefile
 module Mkrf

@@ -1,12 +1,12 @@
-require File.dirname(__FILE__) + '/abstract_unit'
+require File.dirname(__FILE__) + '/../abstract_unit'
 
 class TestSampleProjects < Test::Unit::TestCase
-  SAMPLES_DIR = File.dirname(__FILE__) + '/sample_files'
+  SAMPLES_DIR = File.dirname(__FILE__) + '/../sample_files'
   
   SAMPLE_LIBS = {
-    :trivial => '/libtrivial/libtrivial.bundle',
-    :syck => '/syck-0.55/ext/ruby/ext/syck/syck.bundle',
-    :libxml => '/libxml-ruby-0.3.8/ext/xml/libxml_so.bundle'
+    :trivial => "/libtrivial/libtrivial.#{Config::CONFIG['DLEXT']}",
+    :syck =>    "/syck-0.55/ext/ruby/ext/syck/syck.#{Config::CONFIG['DLEXT']}",
+    :libxml =>  "/libxml-ruby-0.3.8/ext/xml/libxml_so.#{Config::CONFIG['DLEXT']}"
   }
   
   # Set to true for full command line output

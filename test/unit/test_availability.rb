@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + '/abstract_unit'
+require File.dirname(__FILE__) + '/../abstract_unit'
 
 
 class TestAvailability < Test::Unit::TestCase
   def setup
-    @avail = Mkrf::Availability.new(:includes => File.join(File.dirname(__FILE__), 'fixtures'))
+    @avail = Mkrf::Availability.new(:includes => File.join(File.dirname(__FILE__), '..', 'fixtures'))
   end
   
   def teardown
@@ -46,7 +46,7 @@ class TestAvailability < Test::Unit::TestCase
   
   def test_has_header_should_check_many_paths
     assert !@avail.has_header?('header_down_a_directory.h')
-    assert @avail.has_header?('header_down_a_directory.h', File.join(File.dirname(__FILE__), 'fixtures', 'down_a_directory'))
+    assert @avail.has_header?('header_down_a_directory.h', File.join(File.dirname(__FILE__), '..', 'fixtures', 'down_a_directory'))
   end
   
   def test_include_header

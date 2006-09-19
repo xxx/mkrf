@@ -2,7 +2,6 @@
 * command-line configuration options
 
 BUGS
-* Fix libpath (shouldn't default to /usr/local/lib)
 
 
 From Tim Hunter:
