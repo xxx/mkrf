@@ -55,6 +55,15 @@ class TestGenerator < Test::Unit::TestCase
     assert_equal ['static_ruby'], generator.available.loaded_libs
   end
   
+  def test_additional_objects
+    obj_string = 'somedir/somefile.o'
+    generator = Mkrf::Generator.new('testlib') do |g|
+      g.objects = obj_string
+    end
+    
+    assert_match obj_string, generator.rakefile_contents
+  end
+  
   protected
   
   def spec_code

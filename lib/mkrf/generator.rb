@@ -35,14 +35,19 @@ module Mkrf
     attr_accessor :additional_code
     
     # You may append to these attributes directly in your Generator.new block,
-    # for example: <tt>g.objs << ' ../common/foo.o ../common/bar.so -lmystuff'</tt> or
+    # for example: <tt>g.object_files << ' ../common/foo.o ../common/bar.so -lmystuff'</tt> or
     # <tt>g.cflags << ' -ansi -Wall'</tt>
     #
     # Note the extra space at the beginning of those strings.
-    attr_accessor :objs, :cflags
+    attr_accessor :cflags
+
+    # objects is for adding additional linked object files. Source objects will still be automatic.
+    attr_accessor :objects
 
     # Your system-specific linker command to build a shared library.
     attr_accessor :ldshared
+
+    
     
     # Create a new generator which will write a new +Rakefile+ to the local
     # filesystem.
@@ -56,9 +61,9 @@ module Mkrf
       @available = Mkrf::Availability.new(availability_options)
       @defines = []
       
-      @objs = ''
-      @ldshared = CONFIG['LDSHARED']
-      @cflags = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']}"
+      objects = ''
+      ldshared = CONFIG['LDSHARED']
+      cflags = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']}"
       
       yield self if block_given?
       write_rakefile
@@ -146,15 +151,17 @@ SRC = FileList[#{sources.join(',')}]
 OBJ = SRC.ext('o')
 CC = "gcc"
 
-OBJS = "#{@objs}"
-LDSHARED = "#{@ldshared}"
+ADDITIONAL_OBJECTS = '#{objects}'
+
+LDSHARED = "#{CONFIG['LDSHARED']} #{ldshared}"
+
 LIBPATH =  '-L"#{CONFIG['rubylibdir']}"'
 
 INCLUDES = "#{@available.includes_compile_string}"
 
 LIBS = "#{@available.library_compile_string}"
 
-CFLAGS = "#{@cflags} #{defines_compile_string}"
+CFLAGS   = "#{cflags} #{defines_compile_string}"
 
 task :default => ['#{@extension_name}']
 
@@ -164,7 +171,7 @@ end
 
 desc "Build this extension"
 file '#{@extension_name}' => OBJ do
-  sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{OBJS} \#{LIBS}"
+  sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{ADDITIONAL_OBJECTS} \#{LIBS}"
 end
 
 #{additional_code}
