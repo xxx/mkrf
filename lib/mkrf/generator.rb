@@ -31,9 +31,18 @@ module Mkrf
     
     CONFIG = Config::CONFIG
     
-    attr_accessor :additional_code # Any extra code to be added to the Rakefile as a string
+    # Any extra code, given as a string, to be appended to the Rakefile.
+    attr_accessor :additional_code
     
-    attr_accessor :ldshared, :cflags
+    # You may append to these attributes directly in your Generator.new block,
+    # for example: <tt>g.objs << ' ../common/foo.o ../common/bar.so -lmystuff'</tt> or
+    # <tt>g.cflags << ' -ansi -Wall'</tt>
+    #
+    # Note the extra space at the beginning of those strings.
+    attr_accessor :objs, :cflags
+
+    # Your system-specific linker command to build a shared library.
+    attr_accessor :ldshared
     
     # Create a new generator which will write a new +Rakefile+ to the local
     # filesystem.
@@ -47,6 +56,7 @@ module Mkrf
       @available = Mkrf::Availability.new(availability_options)
       @defines = []
       
+      @objs = ''
       @ldshared = CONFIG['LDSHARED']
       @cflags = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']}"
       
@@ -136,6 +146,7 @@ SRC = FileList[#{sources.join(',')}]
 OBJ = SRC.ext('o')
 CC = "gcc"
 
+OBJS = "#{@objs}"
 LDSHARED = "#{@ldshared}"
 LIBPATH =  '-L"#{CONFIG['rubylibdir']}"'
 
@@ -143,7 +154,7 @@ INCLUDES = "#{@available.includes_compile_string}"
 
 LIBS = "#{@available.library_compile_string}"
 
-CFLAGS   = "#{@cflags} #{defines_compile_string}"
+CFLAGS = "#{@cflags} #{defines_compile_string}"
 
 task :default => ['#{@extension_name}']
 
@@ -151,13 +162,9 @@ rule '.o' => '.c' do |t|
   sh "\#{CC} \#{CFLAGS} \#{INCLUDES} -c -o \#{t.name} \#{t.source}"
 end
 
-rule '.so' => '.o' do |t|
-  sh "\#{LDSHARED} \#{LIBPATH} -o \#{OBJ} \#{LOCAL_LIBS} \#{LIBS}"
-end
-
 desc "Build this extension"
 file '#{@extension_name}' => OBJ do
-  sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{LIBS}"
+  sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{OBJS} \#{LIBS}"
 end
 
 #{additional_code}

@@ -1,4 +1,6 @@
 = svn
+* [NEW] Added objs to Generator. Access it as you might ldshared. -John G.
+* [CLEAN-UP] Removed the redundant .so rule from the generated rakefile. -John G.
 * [FIXED] Correct defaults in Availability. [29]
 * [NEW] Using rubylibdir from rbconfig for library path. [29]
 * [NEW] Availability options go straight to availability without generator modification. [29]

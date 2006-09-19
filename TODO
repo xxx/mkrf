@@ -15,4 +15,6 @@ Two more things.
 
 1) How do I add arbitrary strings to the gcc options such as the values of LDFLAGS, CPPFLAGS, and CFLAGS?
 
+A) For now, users may modify them directly via the objs and cflags accessors.
+
 2) RMagick uses about 100 feature test symbols (HAVE_xxx, etc.), too many to specify on the command line. It must be possible to create a configuration header file from a template, like the file created by AC_CONFIG_HEADERS.
