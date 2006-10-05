@@ -41,7 +41,7 @@ module Mkrf
     attr_accessor :additional_code
     
     # You may append to these attributes directly in your Generator.new block,
-    # for example: <tt>g.object << ' ../common/foo.o ../common/bar.so -lmystuff'</tt> or
+    # for example: <tt>g.objects << ' ../common/foo.o ../common/bar.so -lmystuff'</tt> or
     # <tt>g.cflags << ' -ansi -Wall'</tt>
     #
     # Note the extra space at the beginning of those strings.
