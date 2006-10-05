@@ -6,5 +6,4 @@ end
 
 Mkrf::Generator.new('syck') do |g|
   g.include_header("st.h")
-  g.add_source('*.c')         # We can actually do this in the contructor, but this tests add_source
 end

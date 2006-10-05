@@ -1,4 +1,7 @@
 = svn
+* [CLEAN-UP] Removed useless add_source from Generator. We've got a constructor for that. [35]
+* [FIXED] Generator.new defaults to sources in the local directory, so extconfs can (and should) be kept in the same directory as the extension files (PROJ_ROOT/ext) and won't clobber pre-existing Rakefiles. [35]
+* [CLEAN-UP] Goodbye ugly method missing hack! [34]
 * [NEW] Added objs to Generator. Access it as you might ldshared. -John G.
 * [CLEAN-UP] Removed the redundant .so rule from the generated rakefile. -John G.
 * [FIXED] Correct defaults in Availability. [29]

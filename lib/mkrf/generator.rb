@@ -18,7 +18,7 @@ module Mkrf
   # Configuration of the build can be passed to the +Generator+ constructor
   # as a block:
   #
-  #   Mkrf::Generator.new('libxml', '*.c') do |g|
+  #   Mkrf::Generator.new('libxml', 'my_extensions_dir/*.c') do |g|
   #     g.include_library('socket','socket')
   #     g.include_header('libxml/xmlversion.h',
   #                      '/opt/include/libxml2',
@@ -54,8 +54,8 @@ module Mkrf
     #
     # Params:
     # * +extension_name+ -- the name of the extension
-    # * +source_patterns+ -- an array of patterns describing source files to be compiled, ["lib/*.c"] by default
-    def initialize(extension_name, source_patterns = ["lib/*.c"], availability_options = {})
+    # * +source_patterns+ -- an array of patterns describing source files to be compiled, ["*.c"] by default
+    def initialize(extension_name, source_patterns = ["*.c"], availability_options = {})
       @sources = source_patterns
       @extension_name = extension_name + ".#{CONFIG['DLEXT']}"
       @available = Mkrf::Availability.new(availability_options)
@@ -69,11 +69,6 @@ module Mkrf
       write_rakefile
     end
     
-    # Add a new pattern to the list of source patterns
-    def add_source(pattern)
-      @sources << pattern
-    end
-    
     # An array of the source patterns as single quoted strings
     def sources
       @sources.collect {|s| "'#{s}'"}
@@ -81,7 +76,7 @@ module Mkrf
     
     # Add a define to the compile string. Example: 
     #
-    #   Mkrf::Generator.new('my_library.bundle') do |g|    
+    #   Mkrf::Generator.new('my_library') do |g|    
     #     g.add_define(HAVE_PTHREADS)
     #   end
     #

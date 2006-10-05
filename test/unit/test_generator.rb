@@ -17,7 +17,7 @@ class TestGenerator < Test::Unit::TestCase
   
   def test_default_sources
     g = Mkrf::Generator.new('testlib')
-    assert_equal ["'lib/*.c'"], g.sources, "Default sources incorrect"
+    assert_equal ["'*.c'"], g.sources, "Default sources incorrect"
   end
   
   def test_additional_code
