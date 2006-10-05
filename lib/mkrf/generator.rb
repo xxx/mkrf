@@ -161,7 +161,7 @@ INCLUDES = "#{@available.includes_compile_string}"
 
 LIBS = "#{@available.library_compile_string}"
 
-CFLAGS   = "#{cflags} #{defines_compile_string}"
+CFLAGS = "#{cflags} #{defines_compile_string}"
 
 task :default => ['#{@extension_name}']
 

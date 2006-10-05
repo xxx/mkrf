@@ -107,13 +107,16 @@ module Mkrf
       FileUtils.rm_f TEMP_EXECUTABLE
     end
     
-    def method_missing(method, *args, &b)
-      if match = /^with_([_a-zA-Z]\w*)$/.match(method.to_s)
-        super unless STACKABLE_ATTRIBUTES.include? match[1]
-        with_stackable_attribute(match[1], *args, &b)
-      else
-        super
-      end
+    def with_headers(*args, &b)
+      with_stackable_attribute('headers', *args, &b)
+    end
+    
+    def with_loaded_libs(*args, &b)
+      with_stackable_attribute('loaded_libs', *args, &b)
+    end
+    
+    def with_includes(*args, &b)
+      with_stackable_attribute('includes', *args, &b)
     end
     
     # Returns a string of libraries formatted for compilation
@@ -178,8 +181,6 @@ module Mkrf
       
       return false
     end
-    
-    STACKABLE_ATTRIBUTES = ['loaded_libs', 'headers', 'includes']
     
     def with_stackable_attribute(attribute, *args)
       args = args.to_a

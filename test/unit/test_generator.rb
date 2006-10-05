@@ -64,6 +64,24 @@ class TestGenerator < Test::Unit::TestCase
     assert_match obj_string, generator.rakefile_contents
   end
   
+  def test_ldshared
+    ldshared = 'this_normally_isnt_here'
+    generator = Mkrf::Generator.new('testlib') do |g|
+      g.ldshared = ldshared
+    end
+    
+    assert_match Regexp.new("LDSHARED = .*#{ldshared}.*"), generator.rakefile_contents
+  end
+  
+  def test_cflags
+    cflags = 'this_normally_isnt_here'
+    generator = Mkrf::Generator.new('testlib') do |g|
+      g.cflags = cflags
+    end
+    
+    assert_match Regexp.new("CFLAGS = .*#{cflags}.*"), generator.rakefile_contents
+  end
+  
   protected
   
   def spec_code
