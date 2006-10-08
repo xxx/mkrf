@@ -103,6 +103,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = "http://glu.ttono.us"
 
   s.has_rdoc = true
+  s.rdoc_options << '--main' << 'README' << '--title' << 'mkrf'
   s.requirements << 'rake'
   s.require_path = 'lib'
   s.autorequire = 'mkrf'
