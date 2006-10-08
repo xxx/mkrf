@@ -70,7 +70,7 @@ module Mkrf
       @defines = []
       
       @objects  = ''
-      @ldshared = CONFIG['LDSHARED']
+      @ldshared = ''
       @cflags   = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']}"
       
       yield self if block_given?
