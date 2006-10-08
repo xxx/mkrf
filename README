@@ -1,11 +1,10 @@
 = mkrf -- making C extensions for Ruby a bit easier
 
-<tt>mkrf</tt> is intended to replace <tt>mkmf</tt> which is a library for building
-Makefiles to build C extensions to Ruby. The major differences between the two is
-that +mkrf+ builds you a Rakefile instead of a Makefile, and also that +mkrf+
-provides an object-oriented interface.
+<tt>mkrf</tt> is a library for generating Rakefiles to build Ruby extension modules
+written in C. It is intended as a replacement for <tt>mkrf</tt>. The major difference
+between the two is that +mkrf+ builds you a Rakefile instead of a Makefile.
 
-Major goals of mkrf are
+Major goals of mkrf include
 * easy code reuse of its <tt>Availability</tt> class and
 * simple, well documented, use of the <tt>Generator</tt> class.
 
@@ -21,7 +20,7 @@ extension (ex. <tt>PROJECT_ROOT/ext/<i>name_of_module</i></tt>) and it expects,
 by default, that files to be compiled have a <tt>.c</tt> extension and reside in
 that same directory. If your project contains multiple extension modules, then
 each one would get its own subdirectory under <tt>PROJECT_ROOT/ext/</tt> and
-have its own <tt>extconf.rb</tt> file.
+each would have its own <tt>extconf.rb</tt> file.
 
 The most basic usage looks like the following, where the name of the extension
 module being built is "libtrivial":
