@@ -69,9 +69,9 @@ module Mkrf
       @available = Mkrf::Availability.new(availability_options)
       @defines = []
       
-      objects = ''
-      ldshared = CONFIG['LDSHARED']
-      cflags = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']}"
+      @objects  = ''
+      @ldshared = CONFIG['LDSHARED']
+      @cflags   = "#{CONFIG['CCDLFLAGS']} #{CONFIG['CFLAGS']} #{CONFIG['ARCH_FLAG']}"
       
       yield self if block_given?
       write_rakefile
