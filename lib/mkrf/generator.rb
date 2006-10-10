@@ -68,6 +68,7 @@ module Mkrf
       @extension_name = extension_name + ".#{CONFIG['DLEXT']}"
       @available = Mkrf::Availability.new(availability_options)
       @defines = []
+      @cc = CONFIG['CC']
       
       @objects  = ''
       @ldshared = ''
@@ -152,7 +153,7 @@ CLOBBER.include('#{@extension_name}', 'mkrf.log')
 
 SRC = FileList[#{sources.join(',')}]
 OBJ = SRC.ext('o')
-CC = "gcc"
+CC = '#{@cc}'
 
 ADDITIONAL_OBJECTS = '#{objects}'
 
