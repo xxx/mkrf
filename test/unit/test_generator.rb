@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../abstract_unit'
+require 'rbconfig'
 
 # stubb this out so we don't overwrite our test rakefile
 module Mkrf
@@ -116,4 +117,24 @@ class TestGenerator < Test::Unit::TestCase
     end
     SPEC
   end
+end
+
+class TestGeneratorDefaults < Test::Unit::TestCase
+  def setup
+    @generator = Mkrf::Generator.new('trivial_lib')
+  end
+  
+  def test_should_default_objects_to_empty_string
+    assert_equal '', @generator.objects
+  end
+  
+  def test_should_default_ldshared_to_empty_string
+    assert_equal '', @generator.ldshared
+  end
+  
+  def test_should_default_cflags_properly
+    expected = "#{Config::CONFIG['CCDLFLAGS']} #{Config::CONFIG['CFLAGS']} #{Config::CONFIG['ARCH_FLAG']}"
+    assert_equal expected, @generator.cflags
+  end
+  
 end

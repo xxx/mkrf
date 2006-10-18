@@ -1,4 +1,5 @@
 = svn
+* [FIXED] Defaults on Generator work again. [44]
 
 = 0.1.2 10/4/06
 * [CLEAN-UP] Removed useless add_source from Generator. We've got a constructor for that. [35]
