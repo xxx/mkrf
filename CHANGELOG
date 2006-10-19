@@ -1,4 +1,5 @@
 = svn
+* [NEW] Added Zed Shaw's rakehelper lib (from rfuzz, with permission).
 * [NEW] Extensions using mkrf can now build properly in RubyGems!
 * [NEW] Extension configurations should now be named mkrf_conf.rb to not conflict with the mkmf settings in RubyGems.
 * [NEW] Added example extensions.
