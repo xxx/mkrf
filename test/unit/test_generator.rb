@@ -1,5 +1,8 @@
 require File.dirname(__FILE__) + '/../abstract_unit'
 require 'rbconfig'
+# require 'rubygems'
+# require 'mocha'
+# require 'stubba'
 
 # stubb this out so we don't overwrite our test rakefile
 module Mkrf
@@ -8,6 +11,11 @@ module Mkrf
     end
     
     attr_reader :available
+  end
+end
+
+module Kernel
+  def exit(*args)
   end
 end
 
@@ -50,6 +58,23 @@ class TestGenerator < Test::Unit::TestCase
     assert_match(/INFO/, logs)
     assert_match(/WARN/, logs)
   end
+  
+  def test_abort_logs_fatal_error
+    generator = Mkrf::Generator.new('testlib') do |g|
+      g.abort! "Fake header wasn't found." unless g.include_header 'fake_header.h'
+    end
+    
+    logs = File.open('mkrf.log').read
+    assert_match(/FATAL/, logs)
+    assert_match("Fake header wasn't found.", logs)
+  end
+  
+  # Need to figure out how to test this.. mocking doesn't seem to work
+  # def test_abort_exits
+  #   generator = Mkrf::Generator.new('testlib') do |g|
+  #     g.abort! "Aborting!"
+  #   end
+  # end
   
   def test_availability_options_accessible_in_initialize
     generator = Mkrf::Generator.new('testlib', ['lib/*.c'], {:loaded_libs => 'static_ruby'})
