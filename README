@@ -1,8 +1,9 @@
 = mkrf -- making C extensions for Ruby a bit easier
 
-<tt>mkrf</tt> is a library for generating Rakefiles to build Ruby extension modules
-written in C. It is intended as a replacement for <tt>mkrf</tt>. The major difference
-between the two is that +mkrf+ builds you a Rakefile instead of a Makefile.
+<tt>mkrf</tt> is a library for generating Rakefiles to build Ruby
+extension modules written in C. It is intended as a replacement for
+<tt>mkrf</tt>. The major difference between the two is that +mkrf+
+builds you a Rakefile instead of a Makefile.
 
 Major goals of mkrf include
 * easy code reuse of its <tt>Availability</tt> class and
@@ -10,20 +11,25 @@ Major goals of mkrf include
 
 == Basic Usage
 
-<tt>mkrf</tt> works similarly to <tt>mkmf</tt> in that a user writes an
-extension configuration file (usually named <tt>extconf.rb</tt>) and then runs
-it (<tt>ruby ./extconf.rb</tt>), which generates a <tt>Rakefile</tt> in the
-current directory.
+<tt>mkrf</tt> works similarly to <tt>mkmf</tt> in that a user writes
+an extension configuration file and then runs it, generating a
+<tt>Rakefile</tt> in the current directory.
 
-In general, <tt>extconf.rb</tt> should be placed in the root directory of the 
-extension (ex. <tt>PROJECT_ROOT/ext/<i>name_of_module</i></tt>) and it expects,
-by default, that files to be compiled have a <tt>.c</tt> extension and reside in
-that same directory. If your project contains multiple extension modules, then
-each one would get its own subdirectory under <tt>PROJECT_ROOT/ext/</tt> and
-each would have its own <tt>extconf.rb</tt> file.
+With mkmf it was customary to name the extension configuration file
+"<tt>extconf.rb</tt>". With mkrf, you should name this file
+"<tt>mkrf_conf.rb</tt>".
 
-The most basic usage looks like the following, where the name of the extension
-module being built is "libtrivial":
+In general, <tt>mkrf_conf.rb</tt> should be placed in the root
+directory of the extension
+(ex. <tt>PROJECT_ROOT/ext/<i>name_of_module</i></tt>) and it expects,
+by default, that files to be compiled have a <tt>.c</tt> extension and
+reside in that same directory. If your project contains multiple
+extension modules, then each one would get its own subdirectory under
+<tt>PROJECT_ROOT/ext/</tt> and each would have its own
+<tt>mkrf_conf.rb</tt> file.
+
+The most basic usage looks like the following, where the name of the
+extension module being built is "libtrivial":
 
   require 'mkrf'
   Mkrf::Generator.new('libtrivial')
@@ -46,16 +52,39 @@ Another example:
   end
 
 
+== Helpers
+
+mkrf also comes with <tt>rakehelper.rb</tt> -- a module which contains
+methods you may want to use in your project's top-level Rakefile. The
+docs on using rakehelper do not exist at the moment, but for the time
+being, have a look at <tt>examples/trivial/Rakefile</tt> to get an
+idea of how they're used.
+
+
 == Credits
 * Jim Weirich for writing Rake
+
 
 == Licence
 mkrf is available under an MIT-style license.
 
 Copyright (c) 2006 Kevin Clark
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
