@@ -164,6 +164,8 @@ LIBS = "#{@available.library_compile_string}"
 
 CFLAGS = "#{cflags} #{defines_compile_string}"
 
+RUBYARCHDIR = "\#{ENV["RUBYARCHDIR"]}"
+
 task :default => ['#{@extension_name}']
 
 rule '.o' => '.c' do |t|
@@ -173,6 +175,12 @@ end
 desc "Build this extension"
 file '#{@extension_name}' => OBJ do
   sh "\#{LDSHARED} \#{LIBPATH} -o #{@extension_name} \#{OBJ} \#{ADDITIONAL_OBJECTS} \#{LIBS}"
+end
+
+desc "Install this extension"
+task :install => '#{@extension_name}' do
+  makedirs "\#{RUBYARCHDIR}"
+  install "#{@extension_name}", "\#{RUBYARCHDIR}"
 end
 
 #{additional_code}

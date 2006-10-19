@@ -1,4 +1,8 @@
 = svn
+* [NEW] Extensions using mkrf can now build properly in RubyGems!
+* [NEW] Extension configurations should now be named mkrf_conf.rb to not conflict with the mkmf settings in RubyGems.
+* [NEW] Added example extensions.
+* [NEW] Add install task to generated Rakefile.
 * [CLEAN-UP] Preprocessor define handling moved to Availability from Generator.
 * [NEW] find_executable method added to Availability.
 * [FIXED] include_header and has_header? now properly set preprocessor defines.
