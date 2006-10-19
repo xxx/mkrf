@@ -4,7 +4,7 @@ class TestSampleProjects < Test::Unit::TestCase
   SAMPLES_DIR = File.dirname(__FILE__) + '/../sample_files'
   
   SAMPLE_LIBS = {
-    :trivial => "/libtrivial/libtrivial.#{Config::CONFIG['DLEXT']}",
+    :trivial => "/libtrivial/ext/libtrivial.#{Config::CONFIG['DLEXT']}",
     :syck =>    "/syck-0.55/ext/ruby/ext/syck/syck.#{Config::CONFIG['DLEXT']}",
     :libxml =>  "/libxml-ruby-0.3.8/ext/xml/libxml_so.#{Config::CONFIG['DLEXT']}"
   }

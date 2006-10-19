@@ -16,7 +16,7 @@ module Mkrf
     TEMP_SOURCE_FILE = "temp_source.c"
     TEMP_EXECUTABLE = "temp_executable"
     
-    attr_reader :headers, :loaded_libs, :includes, :logger
+    attr_reader :headers, :loaded_libs, :includes, :logger, :defines
     
     # Create a new Availability instance.
     #
@@ -33,6 +33,7 @@ module Mkrf
       @compiler = options[:compiler] || Config::CONFIG["CC"]
       @includes = (options[:includes] || DEFAULT_INCLUDES).to_a
       @logger = Logger.new('mkrf.log')
+      @defines = []
     end
     
     # Include a library in the list of available libs. Returns +false+ if the
@@ -46,7 +47,9 @@ module Mkrf
     end
     
     # Include a header in the list of availiable headers. Returns +false+ if the
-    # header is not available. Returns non-false otherwise.
+    # header is not available. Returns non-false otherwise. If the header is
+    # found, the preprocessor constant HAVE_BLAH is defined where BLAH is the name
+    # of the header in uppercase without the file extension.
     #
     # Params:
     # * <tt>header</tt> -- the name of the header to be included as a string.
@@ -68,14 +71,20 @@ module Mkrf
     end
     
     # Returns +true+ if the header is found in the default search path or in
-    # optional paths passed as an argument, +false+ otherwise.
+    # optional paths passed as an argument, +false+ otherwise. If the header is
+    # found, the preprocessor constant HAVE_BLAH is defined where BLAH is the name
+    # of the header in uppercase without the file extension.
     #
     # Params:
     # * <tt>header</tt> -- the header to be searched for
     # * <tt>paths</tt> -- an optional list of search paths if the header is not found in the default paths
     def has_header?(header, *paths)
-      return true if header_already_loaded?(header) || header_can_link?(header) || 
+      if header_already_loaded?(header) || header_can_link?(header) || 
                      header_found_in_paths?(header, paths)
+        defines << format("HAVE_%s", header.tr("a-z./\055", "A-Z___"))
+        return true 
+      end
+      
       logger.warn "Header not found: #{header}"
       return false
     end
@@ -127,6 +136,18 @@ module Mkrf
     # Returns a string of include directories formatted for compilation
     def includes_compile_string
       @includes.collect {|i| "-I#{i}"}.join(' ')
+    end
+    
+    # Takes the name of an executable and an optional set of paths to search.
+    # If no paths are given, the environmental path is used by default.
+    # Returns the absolute path to an executable, or nil if not found.
+    def find_executable(bin, *paths)
+      paths = ENV['PATH'].split(File::PATH_SEPARATOR) if paths.empty?
+      paths.each do |path|
+        file = File.join(path, bin)
+        return file if File.executable?(file)
+      end
+      return nil
     end
     
     private

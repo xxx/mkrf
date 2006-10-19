@@ -83,6 +83,15 @@ class TestGenerator < Test::Unit::TestCase
     assert_match Regexp.new("CFLAGS = .*#{cflags}.*"), generator.rakefile_contents
   end
   
+  def test_defines_compile_string
+    generator = Mkrf::Generator.new('testlib') do |g|
+      g.add_define 'HAVE_UNIX'
+      g.include_header 'stdio.h'
+    end
+    assert_match(/HAVE_UNIX/, generator.defines_compile_string)
+    assert_match(/HAVE_STDIO_H/, generator.defines_compile_string)
+  end
+    
   protected
   
   def spec_code

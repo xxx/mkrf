@@ -3,7 +3,8 @@ require File.dirname(__FILE__) + '/../abstract_unit'
 
 class TestAvailability < Test::Unit::TestCase
   def setup
-    @avail = Mkrf::Availability.new(:includes => File.join(File.dirname(__FILE__), '..', 'fixtures'))
+    @fixture_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'fixtures'))
+    @avail = Mkrf::Availability.new(:includes => @fixture_path)
   end
   
   def teardown
@@ -46,7 +47,13 @@ class TestAvailability < Test::Unit::TestCase
   
   def test_has_header_should_check_many_paths
     assert !@avail.has_header?('header_down_a_directory.h')
-    assert @avail.has_header?('header_down_a_directory.h', File.join(File.dirname(__FILE__), '..', 'fixtures', 'down_a_directory'))
+    assert @avail.has_header?('header_down_a_directory.h', 
+                              File.join(@fixture_path, 'down_a_directory'))
+  end
+  
+  def test_has_header_should_add_define_with_valid_header
+    assert @avail.has_header?('stdmkrf.h')
+    assert @avail.defines.include?('HAVE_STDMKRF_H'), "Defines: #{@avail.defines.inspect}"
   end
   
   def test_include_header
@@ -67,6 +74,24 @@ class TestAvailability < Test::Unit::TestCase
   def test_method_missing_should_go_down_chain_when_not_catching_stackable_attributes
     assert_raises(NoMethodError) { @avail.not_a_stackable_attribute }
     assert_raises(NoMethodError) { @avail.with_not_a_stackable_attribute }
+  end
+  
+  def test_find_executable_should_return_nil_when_not_found
+    assert_nil @avail.find_executable('fake_executable')
+  end
+  
+  def test_find_executable_should_default_to_search_env_path
+    old_path = ENV['PATH']
+    ENV['PATH'] = @fixture_path
+    expected = File.join(@fixture_path, 'some_binary')
+    assert_equal expected, @avail.find_executable('some_binary')
+  ensure
+    ENV['PATH'] = old_path
+  end
+  
+  def test_find_executable_should_search_given_paths_if_supplied
+    expected = File.join(@fixture_path, 'some_binary')
+    assert_equal expected, @avail.find_executable('some_binary', @fixture_path)
   end
   
   def test_logging

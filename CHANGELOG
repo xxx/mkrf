@@ -1,4 +1,7 @@
 = svn
+* [CLEAN-UP] Preprocessor define handling moved to Availability from Generator.
+* [NEW] find_executable method added to Availability.
+* [FIXED] include_header and has_header? now properly set preprocessor defines.
 * [FIXED] Defaults on Generator work again. [44]
 
 = 0.1.2 10/4/06

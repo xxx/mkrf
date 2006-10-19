@@ -41,7 +41,7 @@ namespace :test do
     BASE_DIR = File.dirname(__FILE__) + '/test/sample_files'
     
     SAMPLE_DIRS = {
-      :trivial => BASE_DIR + '/libtrivial/',
+      :trivial => BASE_DIR + '/libtrivial/ext/',
       :syck => BASE_DIR + '/syck-0.55/ext/ruby/ext/syck/',
       :libxml => BASE_DIR + '/libxml-ruby-0.3.8/ext/xml/'
     }

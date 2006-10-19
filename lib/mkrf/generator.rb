@@ -86,13 +86,13 @@ module Mkrf
     # Add a define to the compile string. Example: 
     #
     #   Mkrf::Generator.new('my_library') do |g|    
-    #     g.add_define(HAVE_PTHREADS)
+    #     g.add_define('HAVE_PTHREADS')
     #   end
     #
     # Params:
     # * +defn+ -- string to add to compile time defines
     def add_define(defn)
-      @defines.push(defn)
+      @available.defines << defn
     end
     
     # Include a library in the compile. Returns +false+ if the
@@ -138,10 +138,7 @@ module Mkrf
     end
     
     def defines_compile_string # :nodoc:
-      (@defines.collect {|define| "-D#{define}" } +
-      @available.headers.collect { |header|
-        format("-DHAVE_%s", header.tr("a-z./\055", "A-Z___"))
-      }).join(' ')
+      @available.defines.collect {|define| "-D#{define}"}.join(' ')
     end
     
     def rakefile_contents # :nodoc:
