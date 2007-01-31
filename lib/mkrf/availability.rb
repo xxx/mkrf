@@ -22,12 +22,14 @@ module Mkrf
     #
     # Valid keys for the options hash include:
     # * <tt>:loaded_libs</tt> -- libraries to load by default
+    # * <tt>:library_paths</tt> -- libraries paths to include by default
     # * <tt>:headers</tt> -- headers to load by default
     # * <tt>:compiler</tt> -- which compiler to use when determining availability
     # * <tt>:includes</tt> -- directories that should be searched for include files
     def initialize(options = {})
       
       @loaded_libs = (options[:loaded_libs] || Config::CONFIG["LIBS"].gsub('-l', '').split).to_a
+      @library_paths = (options[:library_paths] || "").to_a
       # Not sure what COMMON_HEADERS looks like when populated
       @headers = options[:headers] || [] # Config::CONFIG["COMMON_HEADERS"]
       @compiler = options[:compiler] || Config::CONFIG["CC"]
@@ -42,7 +44,11 @@ module Mkrf
     # Params:
     # * <tt>library</tt> -- the library to be included as a string.
     # * <tt>function</tt> -- a method to base the inclusion of the library on. +main+ by default.
-    def include_library(library, function = "main")
+    # * <tt>paths</tt> -- an optional list of search paths if the library is not found in the default paths.
+    def include_library(library, function = "main", *paths)
+      paths.each do |library_dir|
+        @library_paths << library_dir
+      end
       @loaded_libs << library if has_library?(library, function)
     end
     
@@ -64,9 +70,12 @@ module Mkrf
     # Params:
     # * <tt>library</tt> -- the library to be included as a string
     # * <tt>function</tt> -- a method to base the inclusion of the library on. +main+ by default.
-    def has_library?(library, function = "main")
+    # * <tt>paths</tt> -- an optional list of search paths if the library is not found in the default paths
+    def has_library?(library, function = "main", *paths)
       logger.info "Checking for library: #{library}"
       return true if library_already_loaded?(library)
+      # Should this be only found_library? or a specialized version with
+      # path searching?
       found_library?(library, function)
     end
     
@@ -133,6 +142,11 @@ module Mkrf
       @loaded_libs.collect {|l| "-l#{l}"}.join(' ')
     end
     
+    # Returns a string of libraries directories formatted for compilation
+    def library_paths_compile_string
+      @library_paths.collect {|l| "-L#{l}"}.join(' ')
+    end
+
     # Returns a string of include directories formatted for compilation
     def includes_compile_string
       @includes.collect {|i| "-I#{i}"}.join(' ')
@@ -192,6 +206,19 @@ module Mkrf
       return false
     end
     
+#    def library_found_in_paths?(library, paths)
+#      paths.each do |include_path|
+#
+#        if with_libs(include_path) { library_can_link?(header) }
+#          @libspath << include_path
+#          return true
+#        end
+#      end
+#      
+#      return false
+# 
+#    end
+
     def header_found_in_paths?(header, paths)
       paths.each do |include_path|
         if with_includes(include_path) { header_can_link?(header) }
@@ -218,8 +245,11 @@ module Mkrf
     end
     
     def link_command
-      "#{@compiler} -o #{TEMP_EXECUTABLE} #{library_compile_string} " +
-      "#{includes_compile_string} #{TEMP_SOURCE_FILE}"
+      # This current implementation just splats the library_paths in
+      # unconditionally.  Is this problematic?
+      "#{@compiler} -o #{TEMP_EXECUTABLE} #{library_paths_compile_string}" +
+      " #{library_compile_string} #{includes_compile_string}" +
+      " #{TEMP_SOURCE_FILE}"
     end
 
     # Creates a temporary source file with the string passed

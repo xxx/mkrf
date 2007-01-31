@@ -32,6 +32,12 @@ module Mkrf
   #                      '/usr/include/libxml2')
   #   end
   #  
+  # It is also possible to specify the library paths in
+  # include_library
+  #   Mkrf::Generator.new('libxml') do |g|
+  #     g.include_library('socket','socket', '/usr/local/lib/libxml')
+  #   end
+  #  
   class Generator
     include Rake
     
@@ -164,7 +170,7 @@ ADDITIONAL_OBJECTS = '#{objects}'
 
 LDSHARED = "#{CONFIG['LDSHARED']} #{ldshared}"
 
-LIBPATH =  '-L"#{CONFIG['rubylibdir']}"'
+LIBPATH =  "-L#{CONFIG['rubylibdir']} #{@available.library_paths_compile_string}"
 
 INCLUDES = "#{@available.includes_compile_string}"
 
