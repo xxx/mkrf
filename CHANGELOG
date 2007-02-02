@@ -1,4 +1,5 @@
-= svn
+= 0.2.1 02/02/07
+* [NEW] Added paths option to has_library?
 * [NEW] Added Generator#abort! for when that critical library just isn't there.
 * [NEW] Added Zed Shaw's rakehelper lib (from rfuzz, with permission).
 * [NEW] Extensions using mkrf can now build properly in RubyGems!
