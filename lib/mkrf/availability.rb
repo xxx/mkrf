@@ -26,8 +26,7 @@ module Mkrf
     # * <tt>:headers</tt> -- headers to load by default
     # * <tt>:compiler</tt> -- which compiler to use when determining availability
     # * <tt>:includes</tt> -- directories that should be searched for include files
-    def initialize(options = {})
-      
+    def initialize(options = {})      
       @loaded_libs = (options[:loaded_libs] || Config::CONFIG["LIBS"].gsub('-l', '').split).to_a
       @library_paths = (options[:library_paths] || "").to_a
       # Not sure what COMMON_HEADERS looks like when populated
@@ -74,6 +73,7 @@ module Mkrf
     def has_library?(library, function = "main", *paths)
       logger.info "Checking for library: #{library}"
       return true if library_already_loaded?(library)
+      return true if RUBY_PLATFORM =~ /mswin/ # TODO: find a way on windows
       # Should this be only found_library? or a specialized version with
       # path searching?
       found_library?(library, function)
@@ -139,12 +139,36 @@ module Mkrf
     
     # Returns a string of libraries formatted for compilation
     def library_compile_string
-      @loaded_libs.collect {|l| "-l#{l}"}.join(' ')
+      if RUBY_PLATFORM =~ /mswin/
+        @loaded_libs.join(' ')
+      else
+        @loaded_libs.collect {|l| "-l#{l}"}.join(' ')
+      end
     end
     
     # Returns a string of libraries directories formatted for compilation
     def library_paths_compile_string
-      @library_paths.collect {|l| "-L#{l}"}.join(' ')
+      if RUBY_PLATFORM =~ /mswin/
+        @library_paths.collect {|l| "/libpath:#{l}"}.join(' ')
+      else
+        @library_paths.collect {|l| "-L#{l}"}.join(' ')
+      end
+    end
+
+    def ldshared_string
+      if RUBY_PLATFORM =~ /mswin/
+        "link -nologo -incremental:no -debug -opt:ref -opt:icf -dll"
+      else
+        CONFIG['LDSHARED']
+      end
+    end
+
+    def ld_outfile(filename) # :nodoc:
+      if RUBY_PLATFORM =~ /mswin/
+        "-out:#{filename}"
+      else
+        "-o #{filename}"
+      end
     end
 
     # Returns a string of include directories formatted for compilation
@@ -243,7 +267,7 @@ module Mkrf
     def header_include_string
       @headers.collect {|header| "#include <#{header}>"}.join('\n')
     end
-    
+
     def link_command
       # This current implementation just splats the library_paths in
       # unconditionally.  Is this problematic?
