@@ -159,7 +159,7 @@ module Mkrf
       if RUBY_PLATFORM =~ /mswin/
         "link -nologo -incremental:no -debug -opt:ref -opt:icf -dll"
       else
-        CONFIG['LDSHARED']
+        Config::CONFIG['LDSHARED']
       end
     end
 
