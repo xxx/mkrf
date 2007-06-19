@@ -75,7 +75,13 @@ module Mkrf
       @extension_name = extension_name + ".#{CONFIG['DLEXT']}"
       @available = Mkrf::Availability.new(availability_options)
       @defines = []
-      @cc = CONFIG['CC']
+      if @sources[0] =~ /cpp/
+        @cc = 'g++' # should be in CONFIG['C++'] but is not.
+        @source_extension = 'cpp'
+      else
+        @cc = CONFIG['CC']
+        @source_extension = 'c'
+      end
       
       @objects  = ''
       @ldshared = ''
@@ -193,7 +199,7 @@ LIBRUBYARG_SHARED = "#{CONFIG['LIBRUBYARG_SHARED']}"
 
 task :default => ['#{@extension_name}']
 
-rule '.#{objext}' => '.c' do |t|
+rule '.#{objext}' => '.#{@source_extension}' do |t|
   sh "\#{CC} \#{CFLAGS} \#{INCLUDES} -c \#{t.source}"
 end
 
