@@ -43,13 +43,14 @@ namespace :test do
     SAMPLE_DIRS = {
       :trivial => BASE_DIR + '/libtrivial/ext/',
       :syck => BASE_DIR + '/syck-0.55/ext/ruby/ext/syck/',
-      :libxml => BASE_DIR + '/libxml-ruby-0.3.8/ext/xml/'
+      :libxml => BASE_DIR + '/libxml-ruby-0.3.8/ext/xml/',
+      :cpp_bang => BASE_DIR + '/cpp_bang/ext/'
     }
     
     task :default => [:all]
     
     desc "Try to compile all of the sample extensions"
-    task :all => [:trivial, :libxml, :syck]
+    task :all => [:trivial, :libxml, :syck, :cpp_bang]
     
     desc "Try to compile a trivial extension"
     task :trivial do
@@ -66,6 +67,11 @@ namespace :test do
       sh "cd #{SAMPLE_DIRS[:syck]}; ruby extconf.rb; rake"
     end
     
+    desc "Try to compile cpp_bang"
+    task :cpp_bang do
+      sh "cd #{SAMPLE_DIRS[:cpp_bang]}; ruby mkrf_config.rb; rake"
+    end
+
     desc "Clean up after sample tests"
     task :clobber do
       if ENV['PROJECT']
