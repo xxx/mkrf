@@ -9,8 +9,16 @@ module Mkrf
   # which need to determine functionality based on what libraries are available
   # on the current system.
   class Availability
-    DEFAULT_INCLUDES = [Config::CONFIG['includedir'], Config::CONFIG["archdir"],
-                        Config::CONFIG['sitelibdir'], "."]
+    # ruby 1.9+
+    if Config::CONFIG['rubyhdrdir']
+      DEFAULT_INCLUDES = [Config::CONFIG['rubyhdrdir'],
+                          Config::CONFIG['rubyhdrdir'] + "/" + Config::CONFIG['arch'],
+                          Config::CONFIG["archdir"],Config::CONFIG['sitelibdir'], "."]
+
+    else
+      DEFAULT_INCLUDES = [Config::CONFIG['includedir'], Config::CONFIG["archdir"],
+                          Config::CONFIG['sitelibdir'], "."]
+    end
                         
     # These really shouldn't be static like this..
     TEMP_SOURCE_FILE = "temp_source.c"
@@ -27,12 +35,12 @@ module Mkrf
     # * <tt>:compiler</tt> -- which compiler to use when determining availability
     # * <tt>:includes</tt> -- directories that should be searched for include files
     def initialize(options = {})      
-      @loaded_libs = (options[:loaded_libs] || Config::CONFIG["LIBS"].gsub('-l', '').split).to_a
-      @library_paths = (options[:library_paths] || "").to_a
+      @loaded_libs = [(options[:loaded_libs] || Config::CONFIG["LIBS"].gsub('-l', '').split)].flatten
+      @library_paths = [(options[:library_paths] || [])].flatten
       # Not sure what COMMON_HEADERS looks like when populated
       @headers = options[:headers] || [] # Config::CONFIG["COMMON_HEADERS"]
       @compiler = options[:compiler] || Config::CONFIG["CC"]
-      @includes = (options[:includes] || DEFAULT_INCLUDES).to_a
+      @includes = [(options[:includes] || DEFAULT_INCLUDES)].flatten
       @logger = Logger.new('mkrf.log')
       @defines = []
     end
