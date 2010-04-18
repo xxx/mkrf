@@ -150,7 +150,7 @@ module Mkrf
       if RUBY_PLATFORM =~ /mswin/
         @loaded_libs.join(' ')
       else
-        @loaded_libs.collect {|l| "-l#{l}"}.join(' ')
+        @loaded_libs.collect {|l| l =~ %r!/! ? " #{l}" : "-l#{l}"}.join(' ')
       end
     end
     
