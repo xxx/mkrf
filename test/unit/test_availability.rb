@@ -136,9 +136,17 @@ class TestAvailabilityDefaults < Test::Unit::TestCase
   end
   
   def test_default_include_dir_should_be_from_rbconfig
-    expected = [Config::CONFIG['includedir'], Config::CONFIG["archdir"],
-                Config::CONFIG['sitelibdir'], "."]
-                
+    # Ruby 1.9
+    if Config::CONFIG['rubyhdrdir']
+      # Have to add exactly what is in the availiability.rb for Ruby 1.9, since
+      # there is no special RbConfig::CONFIG field for that
+      expected = [RbConfig::CONFIG['includedir'], Config::CONFIG['rubyhdrdir'] +
+                  "/" + Config::CONFIG['arch'], RbConfig::CONFIG["archdir"],
+                  RbConfig::CONFIG['sitelibdir'], "."]
+    else
+      expected = [Config::CONFIG['includedir'], Config::CONFIG["archdir"],
+                  Config::CONFIG['sitelibdir'], "."]
+    end
     assert_equal expected, @avail.send(:instance_variable_get, :@includes)
   end
 end
